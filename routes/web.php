@@ -18,4 +18,5 @@ Route::get('/info',function(){
     phpinfo();
 });
 Route::get('/test/hellow','TestController@hellow');
+Route::get('/test/redis1','TestController@redis1');
 Route::get('/goods/detail','Goods\GoodsController@detail');//商品详情
