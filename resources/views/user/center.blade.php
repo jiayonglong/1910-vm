@@ -9,8 +9,8 @@
 </head>
 <body>
 <center>
-    <form action="" method="post">
-        欢迎来到个人中心
+        用户中心 <br>
+        {{$_COOKIE['name']}},欢迎回来
     </form>
 </center>
 </body>
