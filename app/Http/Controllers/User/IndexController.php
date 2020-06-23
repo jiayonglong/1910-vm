@@ -56,19 +56,32 @@ class IndexController extends Controller
     public function loginDo(Request $request){
         $user_name = $request->input('user_name');
         $password = $request->input('password');
-        echo '用户输入密码:'.$password;echo '</br>';
+//        echo '用户输入密码:'.$password;echo '</br>';
         //验证登录信息
         $u = UserModel::where(['user_name'=>$user_name])->first();
-        echo '数据库密码：'.$u->password;echo '</br>';
+//        echo '数据库密码：'.$u->password;echo '</br>';
 
         //验证密码
         $res = password_verify($password,$u->password);
         if($res){
-            return redirect('user/');
+            //客户端设置cookie
+            setcookie('uid',$u->user_id,time()+3600,'/');
+            setcookie('name',$u->user_name,time()+3600,'/');
+            return redirect('user/center');
             echo "登录 成功";
         }else{
             return redirect('user/login');
             echo "用户与密码不一致";
+        }
+
+    }
+    public function center(){
+//        echo '<pre>';print_r($_COOKIE);echo '</pre>';
+        //判断用户是否登录
+        if(isset($_COOKIE['uid'])&&isset($_COOKIE['name'])){
+            return view('user.center');
+        }else{
+            return redirect('/user/login');
         }
 
     }
