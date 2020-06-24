@@ -29,3 +29,9 @@ Route::post('/user/regDo','User\IndexController@regDo');
 Route::get('/user/login','User\IndexController@login');
 Route::post('/user/loginDo','User\IndexController@loginDo');
 Route::get('/user/center','User\IndexController@center');//个人中心
+
+
+//Api
+Route::post('/api/user/reg','Api\UserController@reg');//注册
+Route::post('/api/user/login','Api\UserController@login');//登录
+Route::get('/api/user/center','Api\UserController@center');//个人中心
