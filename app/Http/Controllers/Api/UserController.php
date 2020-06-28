@@ -7,6 +7,7 @@ use App\Model\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use App\Model\TokenModel;
+use Illuminate\Support\Facades\Redis;
 class UserController extends Controller
 {
     public function reg(Request $request){
@@ -80,11 +81,12 @@ class UserController extends Controller
             $str = $u->user_id . $u->user_name . time();
             $token = substr(md5($str),10,16);
             //保存token
-            $data = [
-                'uid'=>$u->user_id,
-                'token'=>$token
-            ];
-            TokenModel::insert($data);
+//            $data = [
+//                'uid'=>$u->user_id,
+//                'token'=>$token
+//            ];
+//            TokenModel::insert($data);
+            Redis::set($token,$u->user_id);
             $response= [
                 'errno' => 0,
                 'msg' => 'ok',
@@ -99,20 +101,69 @@ class UserController extends Controller
             return $response;
     }
     //个人中心
-    public function center(){
-        $token = $_GET['token'];
-        $res = TokenModel::where(['token'=>$token])->first();
+    public function center(Request $request)
+    {
 
-        if($res)
+        $token = $request->input('token');
+        $uid = Redis::get($token);
+
+        if($uid)
         {
-            $uid = $res->uid;
             $user_info = UserModel::find($uid);
             //已登录
             echo $user_info->user_name . " 欢迎来到个人中心";
         }else{
             //未登录
-            echo "请登录";
+            $response = [
+                'errno' => 50008,
+                'msg'   => '请先登录'
+            ];
+            return $response;
         }
 
     }
+    //订单
+    public function orders()
+    {
+
+        //订单信息
+        $arr = [
+            '0345830953454345354',
+            '9875830953454556354',
+            '1235830953454345354',
+            '2345830953454345354',
+            '5675830953454345354',
+        ];
+
+
+        $response = [
+            'errno' => 0,
+            'msg'   => 'ok',
+            'data'  => [
+                'orders'    => $arr
+            ]
+        ];
+
+        return $response;
+    }
+    //购物车
+    public function cart()
+    {
+
+        $goods = [
+            123,
+            456,
+            789
+        ];
+
+        $response = [
+            'errno' => 0,
+            'msg'   => 'ok',
+            'data'  => $goods
+        ];
+
+        return $response;
+
+    }
+
 }

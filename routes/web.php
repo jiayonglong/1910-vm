@@ -34,4 +34,6 @@ Route::get('/user/center','User\IndexController@center');//个人中心
 //Api
 Route::post('/api/user/reg','Api\UserController@reg');//注册
 Route::post('/api/user/login','Api\UserController@login');//登录
-Route::get('/api/user/center','Api\UserController@center');//个人中心
+Route::get('/api/user/center','Api\UserController@center')->middleware('check.pri');//个人中心
+Route::get('/api/my/orders','Api\UserController@orders')->middleware('check.pri');//订单
+Route::get('/api/my/cart','Api\UserController@cart')->middleware('check.pri');  //购物车
